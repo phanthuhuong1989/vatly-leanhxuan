@@ -1,92 +1,49 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Thí nghiệm ảo: Đòn bẩy – Cân bằng – Vật lý 8</title>
-  <style>
-    body { 
-      font-family: "Times New Roman", serif; 
-      margin: 0; 
-      padding: 10px; 
-      background-color: #ffffff;
-    }
-    h2 {
-      text-align: center;
-      color: #e65100;
-    }
-    #simulation-container {
-      width: 100%;
-      height: 600px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      margin-bottom: 20px;
-    }
-    #chatbot {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 320px;
-      background: #f3e5f5;
-      border: 1px solid #ce93d8;
-      border-radius: 10px;
-      padding: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      font-size: 13px;
-      z-index: 1000;
-    }
-    #chat-log {
-      height: 150px;
-      overflow-y: auto;
-      margin-bottom: 8px;
-      padding: 5px;
-      background: white;
-      border: 1px solid #d1c4e9;
-      font-size: 12px;
-    }
-    input[type="text"] {
-      width: 100%;
-      padding: 5px;
-      font-size: 13px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    button {
-      margin-top: 5px;
-      padding: 5px 10px;
-      background: #7b1fa2;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    button:hover {
-      background: #6a1b9a;
-    }
-  </style>
-</head>
-<body>
-
-<h2>Thí nghiệm ảo: Đòn bẩy – Cân bằng</h2>
-<p><em>Trường THCS Lê Anh Xuân – Đà Nẵng | Môn Vật lý lớp 8</em></p>
-
-<iframe 
-  id="simulation-container" 
-  src="https://phet.colorado.edu/sims/html/balancing-act/latest/balancing-act_all.html?locale=vi"
-  allowfullscreen>
-</iframe>
-
-<div id="chatbot">
-  <strong>💬 Trợ lý Vật lý AI</strong>
-  <div id="chat-log">
-    <em>Chào em! Em có thể hỏi: “Đặt vật nặng thế nào?”, “Làm sao cân bằng đòn bẩy?”, “Cách thay đổi khối lượng?”…</em>
+<!-- Chatbot AI - có thể ẩn/hiện -->
+<div id="chatbot" style="position: fixed; bottom: 20px; right: 20px; width: 320px; background: #f3e5f5; border: 1px solid #ce93d8; border-radius: 10px; padding: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); font-size: 13px; z-index: 1000;">
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <strong>💬 Trợ lý Vật lý AI</strong>
+    <button onclick="toggleChatbot()" style="background: none; border: none; cursor: pointer; font-size: 14px;">🗕</button>
   </div>
-  <input type="text" id="user-input" placeholder="Nhập câu hỏi về đòn bẩy..." />
-  <button onclick="sendQuestion()">Gửi</button>
+  <div id="chat-log" style="height: 150px; overflow-y: auto; margin-bottom: 8px; padding: 5px; background: white; border: 1px solid #d1c4e9; font-size: 12px;"></div>
+  <input type="text" id="user-input" placeholder="Nhập câu hỏi về đòn bẩy..." style="width: 100%; padding: 5px; font-size: 13px; border: 1px solid #ccc; border-radius: 4px;" />
+  <button onclick="sendQuestion()" style="margin-top: 5px; padding: 5px 10px; background: #7b1fa2; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">Gửi</button>
 </div>
 
 <script>
+let isChatbotVisible = true;
+
+function toggleChatbot() {
+  const chatbot = document.getElementById("chatbot");
+  if (isChatbotVisible) {
+    chatbot.style.height = "40px";
+    chatbot.style.overflow = "hidden";
+    chatbot.innerHTML = `
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <strong>💬 Trợ lý Vật lý AI</strong>
+        <button onclick="toggleChatbot()" style="background: none; border: none; cursor: pointer; font-size: 14px;">🗗</button>
+      </div>
+    `;
+  } else {
+    // Khôi phục nội dung gốc
+    chatbot.style.height = "auto";
+    chatbot.style.overflow = "visible";
+    chatbot.innerHTML = `
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <strong>💬 Trợ lý Vật lý AI</strong>
+        <button onclick="toggleChatbot()" style="background: none; border: none; cursor: pointer; font-size: 14px;">🗕</button>
+      </div>
+      <div id="chat-log" style="height: 150px; overflow-y: auto; margin-bottom: 8px; padding: 5px; background: white; border: 1px solid #d1c4e9; font-size: 12px;"></div>
+      <input type="text" id="user-input" placeholder="Nhập câu hỏi về đòn bẩy..." style="width: 100%; padding: 5px; font-size: 13px; border: 1px solid #ccc; border-radius: 4px;" />
+      <button onclick="sendQuestion()" style="margin-top: 5px; padding: 5px 10px; background: #7b1fa2; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">Gửi</button>
+    `;
+    // Gọi lại hàm sendQuestion nếu cần
+    document.getElementById("user-input").addEventListener("keypress", function(e) {
+      if (e.key === "Enter") sendQuestion();
+    });
+  }
+  isChatbotVisible = !isChatbotVisible;
+}
+
 function sendQuestion() {
   const input = document.getElementById("user-input");
   const question = input.value.trim();
@@ -126,6 +83,3 @@ function sendQuestion() {
   chatLog.scrollTop = chatLog.scrollHeight;
 }
 </script>
-
-</body>
-</html>
